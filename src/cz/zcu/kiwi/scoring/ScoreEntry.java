@@ -6,12 +6,18 @@ package cz.zcu.kiwi.scoring;
  */
 public class ScoreEntry {
 
+    private final String version;
     private final String name;
     private final int score;
 
-    public ScoreEntry(String name, int score) {
+    public ScoreEntry(String name, int score, String version) {
         this.name = name;
         this.score = score;
+        this.version = version;
+    }
+
+    public ScoreEntry(String name, String score, String version) {
+        this(name, Integer.parseInt(score), version);
     }
 
     public String getName() {
@@ -20,5 +26,9 @@ public class ScoreEntry {
 
     public int getScore() {
         return score;
+    }
+
+    public String getVersion() {
+        return version;
     }
 }

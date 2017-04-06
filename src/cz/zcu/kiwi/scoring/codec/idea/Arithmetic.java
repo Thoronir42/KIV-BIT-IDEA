@@ -22,16 +22,16 @@ public class Arithmetic {
         return mask;
     }
 
-    public int xor(int a, int b) {
+    int xor(int a, int b) {
         return (a ^ b) & this.mask;
     }
 
-    public int add(int a, int b) {
+    int add(int a, int b) {
         return (a + b) % this.modulo;
     }
 
-    public int mult(int a, int b) {
-        return (a * b) % this.modulo;
+    int mult(int a, int b) {
+        return (a * b) % this.modulo + 1;
     }
 
 
