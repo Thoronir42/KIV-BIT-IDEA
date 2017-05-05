@@ -1,4 +1,4 @@
-package cz.zcu.kiwi.scoring;
+package cz.zcu.kiwi.idea;
 
 
 /**

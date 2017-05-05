@@ -1,6 +1,6 @@
-package cz.zcu.kiwi.scoring.codec;
+package cz.zcu.kiwi.idea.codec;
 
-import cz.zcu.kiwi.scoring.ScoreEntry;
+import cz.zcu.kiwi.idea.ScoreEntry;
 
 /**
  * @author Skoro

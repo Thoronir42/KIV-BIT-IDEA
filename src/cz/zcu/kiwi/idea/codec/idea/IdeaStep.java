@@ -1,4 +1,4 @@
-package cz.zcu.kiwi.scoring.codec.idea;
+package cz.zcu.kiwi.idea.codec.idea;
 
 class IdeaStep extends AIdeaStep{
 
