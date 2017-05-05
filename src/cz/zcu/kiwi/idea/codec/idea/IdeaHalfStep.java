@@ -7,12 +7,12 @@ public class IdeaHalfStep extends AIdeaStep {
     }
 
     @Override
-    int[] execute(int[] keys) {
+    int[] execute(int[] key) {
         return output = new int[]{
-                a.mult(input[0], keys[0]),
-                a.add(input[1], keys[1]),
-                a.add(input[2], keys[2]),
-                a.mult(input[3], keys[3])
+                a.mult(input[0], key[0]),
+                a.add(input[1], key[1]),
+                a.add(input[2], key[2]),
+                a.mult(input[3], key[3])
         };
     }
 }

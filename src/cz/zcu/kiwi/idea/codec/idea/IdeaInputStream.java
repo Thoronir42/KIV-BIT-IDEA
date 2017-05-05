@@ -10,10 +10,6 @@ public class IdeaInputStream implements AutoCloseable {
         this.inputStream = inputStream;
     }
 
-    public IdeaInputStream(File file) throws FileNotFoundException {
-        this(new FileInputStream(file));
-    }
-
     public int[] nextBlock() throws IOException {
         if (!hasMore()) {
             throw new IOException("End of stream reached");

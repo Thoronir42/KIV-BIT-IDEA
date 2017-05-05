@@ -6,19 +6,19 @@ class IdeaStep extends AIdeaStep{
         super(input, a);
     }
 
-    int[] execute(int[] keys) {
-        int ak1 = a.mult(input[0], keys[0]);
-        int ak2 = a.add(input[1], keys[1]);
-        int ak3 = a.add(input[2], keys[2]);
-        int ak4 = a.mult(input[3], keys[3]);
+    int[] execute(int[] key) {
+        int ak1 = a.mult(input[0], key[0]);
+        int ak2 = a.add(input[1], key[1]);
+        int ak3 = a.add(input[2], key[2]);
+        int ak4 = a.mult(input[3], key[3]);
 
         int b13 = a.xor(ak1, ak3);
         int b24 = a.xor(ak2, ak4);
 
-        int bk135 = a.mult(b13, keys[4]);
+        int bk135 = a.mult(b13, key[4]);
         int c1 = a.add(b24, bk135);
 
-        int ck16 = a.mult(c1, keys[5]);
+        int ck16 = a.mult(c1, key[5]);
         int d1 = a.mult(bk135, ck16);
 
         return this.output = new int[]{
@@ -27,5 +27,13 @@ class IdeaStep extends AIdeaStep{
                 a.xor(ak2, d1),
                 a.xor(ak4, d1)
         };
+    }
+
+    IdeaStep nextStep(int[] key) {
+        return new IdeaStep(this.execute(key), a);
+    }
+
+    IdeaHalfStep nextHalfStep(int[] key) {
+        return new IdeaHalfStep(this.execute(key), a);
     }
 }

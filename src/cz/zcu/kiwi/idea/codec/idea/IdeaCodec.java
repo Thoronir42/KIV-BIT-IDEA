@@ -1,10 +1,9 @@
 package cz.zcu.kiwi.idea.codec.idea;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 public class IdeaCodec {
 
@@ -15,14 +14,10 @@ public class IdeaCodec {
     private final int[] reverseKey;
 
 
-    public IdeaCodec(String key) {
+    public IdeaCodec(int[] key) throws IOException {
         this.arithmetic = new Arithmetic(16, 16);
-        this.key = this.parseKey(key);
+        this.key = key;
         this.reverseKey = this.reverse(this.key);
-    }
-
-    private int[] parseKey(String key) {
-        throw new NotImplementedException();
     }
 
     private int[] reverse(int[] key) {
@@ -33,19 +28,6 @@ public class IdeaCodec {
         }
 
         return result;
-    }
-
-    private int[] encodeBlock(int[] input, int[] key) {
-        AIdeaStep[] steps = new AIdeaStep[STEPS_COUNT + 1];
-        steps[0] = new IdeaStep(input, arithmetic);
-
-        for (int i = 1; i < STEPS_COUNT; i++) {
-            int[] stepResult = steps[i - 1].execute(key);
-            steps[i] = new IdeaStep(stepResult, arithmetic);
-        }
-        steps[STEPS_COUNT] = new IdeaHalfStep(steps[STEPS_COUNT - 1].getOutput(), arithmetic);
-
-        return steps[STEPS_COUNT].execute(key);
     }
 
     public long encode(InputStream input, OutputStream output) throws IOException {
@@ -60,16 +42,33 @@ public class IdeaCodec {
         IdeaInputStream iis = new IdeaInputStream(input);
 
         long totalLength = 0;
+
         while (iis.hasMore()) {
-            int[] encoded = encodeBlock(iis.nextBlock(), key);
-            for (int anEncoded : encoded) {
-                output.write(anEncoded);
+            int[] blockIn = iis.nextBlock();
+            System.out.println("In:\n" + Arrays.toString(blockIn));
+            int[] blockOut = processBlock(blockIn, key);
+            System.out.println("Out:\n" + Arrays.toString(blockIn));
+            for (int n : blockOut) {
+                output.write(n);
             }
 
-            totalLength += encoded.length;
+            totalLength += blockOut.length;
         }
 
         return totalLength;
+    }
+
+    private int[] processBlock(int[] input, int[] key) {
+        IdeaStep[] steps = new IdeaStep[STEPS_COUNT];
+        steps[0] = new IdeaStep(input, arithmetic);
+
+        for (int i = 1; i < STEPS_COUNT; i++) {
+            steps[i] = steps[i - 1].nextStep(key);
+        }
+
+        IdeaHalfStep halfStep = steps[STEPS_COUNT - 1].nextHalfStep(key);
+
+        return halfStep.execute(key);
     }
 }
 
