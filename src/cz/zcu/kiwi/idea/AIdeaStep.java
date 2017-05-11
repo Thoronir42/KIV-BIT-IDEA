@@ -1,4 +1,6 @@
-package cz.zcu.kiwi.idea.codec.idea;
+package cz.zcu.kiwi.idea;
+
+import cz.zcu.kiwi.cryptography.Arithmetic;
 
 abstract class AIdeaStep {
 
@@ -11,7 +13,7 @@ abstract class AIdeaStep {
         this.a = a;
     }
 
-    abstract int[] execute(int[] keys);
+    abstract int[] execute(IdeaKey key, int round);
 
     int[] getOutput() {
         return output;

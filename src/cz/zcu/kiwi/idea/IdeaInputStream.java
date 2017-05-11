@@ -1,4 +1,4 @@
-package cz.zcu.kiwi.idea.codec.idea;
+package cz.zcu.kiwi.idea;
 
 import java.io.*;
 

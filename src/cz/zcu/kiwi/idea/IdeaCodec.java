@@ -1,4 +1,6 @@
-package cz.zcu.kiwi.idea.codec.idea;
+package cz.zcu.kiwi.idea;
+
+import cz.zcu.kiwi.cryptography.Arithmetic;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,27 +9,16 @@ import java.util.Arrays;
 
 public class IdeaCodec {
 
-    private final static int STEPS_COUNT = 8;
+    final static int ROUND_COUNT = 8;
+    static final int HALF_ROUND = 9;
 
     private final Arithmetic arithmetic;
-    private final int[] key;
-    private final int[] reverseKey;
+    private final IdeaKey key;
 
 
-    public IdeaCodec(int[] key) throws IOException {
-        this.arithmetic = new Arithmetic(16, 16);
-        this.key = key;
-        this.reverseKey = this.reverse(this.key);
-    }
-
-    private int[] reverse(int[] key) {
-        int[] result = new int[key.length];
-
-        for (int i = 0; i < key.length; i++) {
-            result[key.length - 1 - i] = key[i];
-        }
-
-        return result;
+    public IdeaCodec(String key) {
+        this.arithmetic = new Arithmetic();
+        this.key = new IdeaKey(key);
     }
 
     public long encode(InputStream input, OutputStream output) throws IOException {
@@ -35,10 +26,10 @@ public class IdeaCodec {
     }
 
     public long decode(InputStream input, OutputStream output) throws IOException {
-        return this.processStream(input, output, this.reverseKey);
+        return this.processStream(input, output, this.key.inverse());
     }
 
-    private long processStream(InputStream input, OutputStream output, int[] key) throws IOException {
+    private long processStream(InputStream input, OutputStream output, IdeaKey key) throws IOException {
         IdeaInputStream iis = new IdeaInputStream(input);
 
         long totalLength = 0;
@@ -58,17 +49,17 @@ public class IdeaCodec {
         return totalLength;
     }
 
-    private int[] processBlock(int[] input, int[] key) {
-        IdeaStep[] steps = new IdeaStep[STEPS_COUNT];
+    private int[] processBlock(int[] input, IdeaKey key) {
+        IdeaStep[] steps = new IdeaStep[ROUND_COUNT];
         steps[0] = new IdeaStep(input, arithmetic);
 
-        for (int i = 1; i < STEPS_COUNT; i++) {
-            steps[i] = steps[i - 1].nextStep(key);
+        for (int i = 1; i < ROUND_COUNT; i++) {
+            steps[i] = steps[i - 1].nextStep(key, i - 1);
         }
 
-        IdeaHalfStep halfStep = steps[STEPS_COUNT - 1].nextHalfStep(key);
+        IdeaHalfStep halfStep = steps[ROUND_COUNT - 1].nextHalfStep(key, ROUND_COUNT - 1);
 
-        return halfStep.execute(key);
+        return halfStep.execute(key, HALF_ROUND);
     }
 }
 
