@@ -1,11 +1,13 @@
 package cz.zcu.kiwi.idea;
 
 import cz.zcu.kiwi.cryptography.Arithmetic;
+import cz.zcu.kiwi.idea.data.Chunk;
+import cz.zcu.kiwi.idea.data.IdeaInputStream;
+import cz.zcu.kiwi.idea.data.IdeaOutputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 
 public class IdeaCodec {
 
@@ -31,25 +33,23 @@ public class IdeaCodec {
 
     private long processStream(InputStream input, OutputStream output, IdeaKey key) throws IOException {
         IdeaInputStream iis = new IdeaInputStream(input);
-
+        IdeaOutputStream ios = new IdeaOutputStream(output);
         long totalLength = 0;
 
         while (iis.hasMore()) {
-            int[] blockIn = iis.nextBlock();
-            System.out.println("In:\n" + Arrays.toString(blockIn));
-            int[] blockOut = processBlock(blockIn, key);
-            System.out.println("Out:\n" + Arrays.toString(blockIn));
-            for (int n : blockOut) {
-                output.write(n);
-            }
+            Chunk chunkIn = iis.nextChunk();
+            System.out.println("In:\n" + chunkIn);
+            Chunk chunkOut = processBlock(chunkIn, key);
+            System.out.println("Out:\n" + chunkIn);
+            ios.writeChunk(chunkOut);
 
-            totalLength += blockOut.length;
+            totalLength += Chunk.SIZE;
         }
 
         return totalLength;
     }
 
-    private int[] processBlock(int[] input, IdeaKey key) {
+    private Chunk processBlock(Chunk input, IdeaKey key) {
         IdeaStep[] steps = new IdeaStep[ROUND_COUNT];
         steps[0] = new IdeaStep(input, arithmetic);
 

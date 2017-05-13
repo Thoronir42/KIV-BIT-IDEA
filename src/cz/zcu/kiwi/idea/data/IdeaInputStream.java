@@ -1,6 +1,8 @@
-package cz.zcu.kiwi.idea;
+package cz.zcu.kiwi.idea.data;
 
-import java.io.*;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class IdeaInputStream implements AutoCloseable {
 
@@ -10,28 +12,29 @@ public class IdeaInputStream implements AutoCloseable {
         this.inputStream = inputStream;
     }
 
-    public int[] nextBlock() throws IOException {
+    public Chunk nextChunk() throws IOException {
         if (!hasMore()) {
             throw new IOException("End of stream reached");
         }
-        return new int[]{
-                readInt(),
-                readInt(),
-                readInt(),
-                readInt()
-        };
+
+        return new Chunk(readPart(), readPart(), readPart(), readPart());
     }
 
     public boolean hasMore() throws IOException {
         return inputStream.available() > 0;
     }
 
-    private int readInt() throws IOException {
+    private int readPart() throws IOException {
+        int block = 0;
+
         if (hasMore()) {
-            return inputStream.read();
+            block = inputStream.read() << 8;
+        }
+        if (hasMore()) {
+            block |= inputStream.read();
         }
 
-        return 0;
+        return block;
     }
 
     @Override
