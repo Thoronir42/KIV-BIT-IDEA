@@ -19,7 +19,7 @@ public class Main {
 
         try {
 //            main.run(args[0], args[1], args[2], args[3]);
-            String key = "12345678901234567890123456789012";
+            String key = "123456789ABCDEF0123456789ABCDEF0";
 
             main.run("encode", "data/message.txt", "data/encrypted.txt", key);
             main.run("decode", "data/encrypted.txt", "data/decrypted.txt", key);

@@ -12,7 +12,6 @@ import java.io.OutputStream;
 public class IdeaCodec {
 
     final static int ROUNDS = 8;
-    static final int HALF_ROUND = 9;
 
     private final Arithmetic arithmetic;
     private final IdeaKey key;
@@ -34,13 +33,11 @@ public class IdeaCodec {
     private long processStream(InputStream input, OutputStream output, IdeaKey key) throws IOException {
         IdeaInputStream iis = new IdeaInputStream(input);
         IdeaOutputStream ios = new IdeaOutputStream(output);
-        long totalLength = 0;
 
+        long totalLength = 0;
         while (iis.hasMore()) {
             Chunk chunkIn = iis.nextChunk();
-            System.out.println("In:\n" + chunkIn);
             Chunk chunkOut = processBlock(chunkIn, key);
-            System.out.println("Out:\n" + chunkOut);
             ios.writeChunk(chunkOut);
 
             totalLength += Chunk.SIZE;
@@ -59,7 +56,7 @@ public class IdeaCodec {
 
         IdeaHalfStep halfStep = steps[ROUNDS - 1].nextHalfStep(key, ROUNDS - 1);
 
-        return halfStep.execute(key, HALF_ROUND);
+        return halfStep.execute(key, ROUNDS);
     }
 }
 
