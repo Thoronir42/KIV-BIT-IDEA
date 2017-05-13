@@ -3,35 +3,38 @@ package cz.zcu.kiwi.idea;
 import cz.zcu.kiwi.cryptography.Key;
 import cz.zcu.kiwi.generic.BoundsException;
 
-public class IdeaKey extends Key {
+final class IdeaKey extends Key {
 
-    private static final int SIZE = 6;
+    private static final int SIZE = 16;
 
     private final boolean inverse;
 
-    private final byte[] subKeys;
+    private final int[] subKeys;
 
     IdeaKey(String text) {
         this(text, false);
     }
 
-    IdeaKey(String text, boolean inverse) {
+    private IdeaKey(String text, boolean inverse) {
         super(text, SIZE);
 
         this.inverse = inverse;
-        this.subKeys = generateSubKeys(this.parts, inverse);
+        this.subKeys = generateSubkeys(this.parts);
     }
 
-    private IdeaKey(String text, boolean inverse, byte[] subKeys) {
+    private IdeaKey(String text, boolean inverse, int[] subKeys) {
         super(text, SIZE);
 
         this.inverse = inverse;
         this.subKeys = subKeys;
     }
 
-    public int subKey(int n, int round) {
-        if(0 > round || round > 8) {
-            throw new BoundsException(0, IdeaCodec.ROUND_COUNT, round);
+    int subKey(int n, int round) {
+        if(0 > round || round > 9) {
+            throw new BoundsException(0, IdeaCodec.ROUNDS + 1, round);
+        }
+        if(round == 9 && n > 4) {
+            throw new IndexOutOfBoundsException("Last (half-)round subkey index must be less than 4");
         }
         return this.subKeys[n];
     }

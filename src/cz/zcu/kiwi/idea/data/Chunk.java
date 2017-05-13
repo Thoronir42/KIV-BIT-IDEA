@@ -22,6 +22,6 @@ public class Chunk {
     }
 
     public String toString() {
-        return String.format("[%3d, %3d, %3d, %3d]", blocks[0], blocks[1], blocks[2], blocks[3]);
+        return String.format("[%04x, %04x, %04x, %04x]", blocks[0], blocks[1], blocks[2], blocks[3]);
     }
 }

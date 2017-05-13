@@ -5,6 +5,10 @@ public class Key {
     protected final String text;
     protected final byte[] parts;
 
+    /**
+     * @param text Text containing hexadecimal characters representing the key
+     * @param size byte count of key
+     */
     public Key(String text, int size) {
         this.text = text;
         this.parts = parseToParts(text, size);
@@ -30,17 +34,17 @@ public class Key {
     private static byte[] parseToParts(String text, int size) {
         byte[] parts = new byte[size];
 
-        int keyLength = text.length();
+        int sourceLength = text.length();
 
-        if (keyLength < size) {
-            throw new IllegalArgumentException("Key must be at least " + size + "chars long. " + keyLength + " given");
+        if (sourceLength < size * 2) {
+            throw new IllegalArgumentException("Key must be at least " + size * 2 + "chars long. " + sourceLength + " given");
         }
 
         for (int i = 0; i < size; i++) {
             parts[i] = 0;
         }
-        for (int i = 0, j = 0; i < keyLength; i++, j = (j + 1) % size) {
-            parts[j] ^= (byte) text.charAt(i);
+        for (int i = 0, j = 0; i < sourceLength - 1; i += 2, j = (j + 1) % size) {
+            parts[j] ^= Byte.parseByte(text.substring(i, i+1), 16);
         }
 
         return parts;
