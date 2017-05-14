@@ -1,45 +1,26 @@
 package cz.zcu.kiwi.cryptography;
 
-public class Key {
+public class HexDecKey extends CryptoKey {
 
-    protected final String text;
-    protected final byte[] parts;
+    private final String text;
 
     /**
      * @param text Text containing hexadecimal characters representing the key
      * @param size byte count of key
      */
-    public Key(String text, int size) {
+    public HexDecKey(String text, int size) {
+        super(parseText(text, size));
         this.text = text;
-        this.parts = parseToParts(text, size);
-    }
-
-    public byte part(int n) throws IndexOutOfBoundsException {
-        return this.parts[n];
     }
 
 
-    public String getText() {
-        return text;
-    }
-
-    public int getSize() {
-        return this.parts.length;
-    }
-
-    public String toString() {
-        return super.toString() + " " + text;
-    }
-
-
-
-    private static byte[] parseToParts(String text, int size) {
+    private static byte[] parseText(String text, int size) {
         byte[] parts = new byte[size];
 
         int sourceLength = text.length();
 
         if (sourceLength < size * 2) {
-            throw new IllegalArgumentException("Key must be at least " + size * 2 + "chars long. " + sourceLength + " given");
+            throw new IllegalArgumentException("HexDecKey must be at least " + size * 2 + "chars long. " + sourceLength + " given");
         }
 
         for (int i = 0; i < size; i++) {

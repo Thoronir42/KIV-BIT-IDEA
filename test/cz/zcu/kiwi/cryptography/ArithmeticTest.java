@@ -6,24 +6,62 @@ import static org.junit.Assert.*;
 
 public class ArithmeticTest {
 
+    @Test
+    public void add() throws Exception {
+        int[][] data = new int[][]{
+                new int[]{0x0, 0x0, 0x0},
+                new int[]{0x1, 0x10, 0x11},
+                new int[]{0xFFFF, 0x0, 0xFFFF},
+                new int[]{0x0, 0xFFFF, 0xFFFF},
+                new int[]{0xFFFF, 0x0, 0xFFFF},
+                new int[]{0xFFFF, 0xFFFF, 0xFFFE},
+        };
+
+        for(int[] row : data) {
+            int actual = Arithmetic.add(row[0], row[1]);
+            int expected = row[2];
+
+            String message = String.format("%X + %X should be %X but was %X", row[0], row[1], row[2], actual);
+            assertEquals(message, expected, actual);
+        }
+    }
+
+    @Test
+    public void mult() throws Exception {
+        int[][] data = new int[][]{
+//                new int[]{0x0, 0x0, 0x0},
+                new int[]{0x1, 0x10, 0x10},
+                new int[]{0x20, 0x20, 0x400},
+        };
+
+        for(int[] row : data) {
+            int actual = Arithmetic.mult(row[0], row[1]);
+            int expected = row[2];
+
+            String message = String.format("%X * %X should be %X but was %X", row[0], row[1], row[2], actual);
+            assertEquals(message, expected, actual);
+        }
+    }
+
+    @Test
     public void modularInverse() throws Exception {
         int[][] data = new int[][]{
-                new int[]{1, 1, 3},
-                new int[]{2, 2, 3},
+                new int[]{0x0, 0x0},
+                new int[]{0x1, 0x1},
 
-                new int[]{3, 2, 5},
-                new int[]{2, 3, 5},
-                new int[]{4, 4, 5},
+                new int[]{0x64, 0x451F},
+                new int[]{0x3E8, 0x86EA},
+//                new int[]{0x10000, 0x0},
 
-                new int[]{1, 1, 7},
-                new int[]{4, 2, 7},
-                new int[]{5, 3, 7},
-                new int[]{6, 6, 7},
+                new int[]{0x10001, 0x0},
+                new int[]{0x10002, 0x1},
         };
 
         for (int[] row : data) {
-            String message = String.format("mod(%d, %d)", row[1], row[2]);
-            assertEquals(message, row[0], Arithmetic.modularInverse(row[1], row[2]));
+            int actual = Arithmetic.modularInverse(row[0]);
+
+            String message = String.format("modInv(%04X, FFFF) should be %04X but was %04X", row[0], row[1], actual);
+            assertEquals(message, row[1], actual);
         }
     }
 

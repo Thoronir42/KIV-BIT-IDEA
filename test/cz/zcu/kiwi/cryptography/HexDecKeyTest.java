@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class KeyTest {
+public class HexDecKeyTest {
 
     @Test
     public void testPart() {
-        Key k = new Key("0110", 2);
+        HexDecKey k = new HexDecKey("0110", 2);
 
         assertEquals(0x01, k.part(0));
         assertEquals(0x10, k.part(1));
@@ -16,7 +16,7 @@ public class KeyTest {
 
     @Test
     public void testLongText() {
-        Key k = new Key("011010", 2);
+        HexDecKey k = new HexDecKey("011010", 2);
 
         assertEquals(0x11, k.part(0));
         assertEquals(0x10, k.part(1));
@@ -24,6 +24,6 @@ public class KeyTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testShortTextException() {
-        new Key("01", 2);
+        new HexDecKey("01", 2);
     }
 }

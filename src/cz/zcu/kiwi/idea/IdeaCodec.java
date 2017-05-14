@@ -10,11 +10,6 @@ public class IdeaCodec {
 
     protected final IdeaKey key;
 
-
-    public IdeaCodec(String key) {
-        this(new IdeaKey(key));
-    }
-
     public IdeaCodec(IdeaKey key) {
         this.key = key;
     }

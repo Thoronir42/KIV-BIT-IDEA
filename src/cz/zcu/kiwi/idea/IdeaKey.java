@@ -1,23 +1,24 @@
 package cz.zcu.kiwi.idea;
 
+import cz.zcu.kiwi.cryptography.CryptoKey;
 import cz.zcu.kiwi.cryptography.Arithmetic;
-import cz.zcu.kiwi.cryptography.Key;
 import cz.zcu.kiwi.generic.BoundsException;
 
-public final class IdeaKey extends Key {
+public final class IdeaKey {
 
-    private static final int SIZE = 16; // 16 bytes = 128-bit key
+    public static final int SIZE = 16; // 16 bytes = 128-bit key
     private static final int SUB_KEYS_IN_ROUND = 6;
     private static final int SUB_KEYS = IdeaCodec.ROUNDS * SUB_KEYS_IN_ROUND + 4;
-
 
     private final int[] encryptionKey;
     private final int[] decryptionKey;
 
-    public IdeaKey(String text) {
-        super(text, SIZE);
+    public IdeaKey(CryptoKey key) {
+        if(key.getSize() != SIZE) {
+            throw new IllegalArgumentException();
+        }
 
-        this.encryptionKey = generateEncryptionKey(this.parts);
+        this.encryptionKey = generateEncryptionKey(key.getParts());
         this.decryptionKey = createDecryptionKey(this.encryptionKey);
 
         printKey(this.encryptionKey);
@@ -59,10 +60,6 @@ public final class IdeaKey extends Key {
     }
 
     private static int[] generateEncryptionKey(byte[] key) {
-        if (key.length != SIZE) {
-            throw new IllegalArgumentException();
-        }
-
         int[] ek = new int[SUB_KEYS]; // encryption key 52 16-bit encryptionKey
         //First, the 128-bit key is partitioned into eight 16-bit sub-blocks
         for (int i = 0; i < 8; i++) {
@@ -92,11 +89,11 @@ public final class IdeaKey extends Key {
             dk[i] = Arithmetic.modularInverse(ek[48 - i]);
 
             if (i == 0 || i == 48) {
-                dk[i + 1] = Arithmetic.inv(ek[49 - i]);
-                dk[i + 2] = Arithmetic.inv(ek[50 - i]);
+                dk[i + 1] = Arithmetic.addInv(ek[49 - i]);
+                dk[i + 2] = Arithmetic.addInv(ek[50 - i]);
             } else {
-                dk[i + 1] = Arithmetic.inv(ek[50 - i]);
-                dk[i + 2] = Arithmetic.inv(ek[49 - i]);
+                dk[i + 1] = Arithmetic.addInv(ek[50 - i]);
+                dk[i + 2] = Arithmetic.addInv(ek[49 - i]);
             }
 
             dk[i + 3] = Arithmetic.modularInverse(ek[51 - i]);

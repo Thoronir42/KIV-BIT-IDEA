@@ -1,5 +1,6 @@
 package cz.zcu.kiwi.kiv_bit;
 
+import cz.zcu.kiwi.cryptography.HexDecKey;
 import cz.zcu.kiwi.idea.IdeaCodec;
 import cz.zcu.kiwi.idea.IdeaCodecDev;
 import cz.zcu.kiwi.idea.IdeaKey;
@@ -24,7 +25,7 @@ public class Main {
         try {
 
             String key = "123456789ABCDEF0123456789ABCDEF0";
-            IdeaKey ideaKey = new IdeaKey(key);
+            IdeaKey ideaKey = new IdeaKey(new HexDecKey(key, IdeaKey.SIZE));
 
             switch (DEBUG) {
                 case 0:
@@ -49,7 +50,7 @@ public class Main {
     }
 
     private void run(String operation, String fileIn, String fileOut, String key) throws IOException {
-        this.run(operation, fileIn, fileOut, new IdeaKey(key));
+        this.run(operation, fileIn, fileOut, new IdeaKey(new HexDecKey(key, IdeaKey.SIZE)));
     }
 
     private void run(String operation, String fileIn, String fileOut, IdeaKey key) throws IOException {
