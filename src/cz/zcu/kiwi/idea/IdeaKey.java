@@ -24,7 +24,7 @@ public final class IdeaKey extends Key {
         printKey(this.decryptionKey);
     }
 
-    void printKey(int[] key) {
+    private void printKey(int[] key) {
         for (int i = 0; i < SUB_KEYS_IN_ROUND; i++) {
             System.out.format("%5d", i);
         }
@@ -58,12 +58,6 @@ public final class IdeaKey extends Key {
         }
     }
 
-    /**
-     * Creating the encryptionKey from the user key.
-     *
-     * @param key 128-bit user key
-     * @return 52 16-bit key sub-blocks (six for each of the eight rounds and four more for the output transformation)
-     */
     private static int[] generateEncryptionKey(byte[] key) {
         if (key.length != SIZE) {
             throw new IllegalArgumentException();
@@ -75,7 +69,7 @@ public final class IdeaKey extends Key {
             ek[i] = Arithmetic.concatBytes(key[i * 2], key[i * 2 + 1]);
         }
 
-        //Expand encryption subkeys
+        //Expand encryption subKeys
         for (int i = 8; i < SUB_KEYS; i++) {
             if ((i % 8) == 6)
                 ek[i] = (ek[i - 7] << 9) | (ek[i - 14] >> 7);
@@ -90,17 +84,10 @@ public final class IdeaKey extends Key {
         return ek;
     }
 
-    /**
-     * Reverse and invert the encryptionKey to get the decryption encryptionKey.
-     * They are either the additive or multiplicative inverses of the encryption encryptionKey in reverse order.
-     *
-     * @param ek encryptionKey
-     * @return inverted key
-     */
     private static int[] createDecryptionKey(int[] ek) {
         int[] dk = new int[SUB_KEYS];
 
-        //Generate subkeys for decryption
+        //Generate subKeys for decryption
         for (int i = 0; i < SUB_KEYS; i += 6) {
             dk[i] = Arithmetic.modularInverse(ek[48 - i]);
 

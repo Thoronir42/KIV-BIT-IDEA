@@ -1,6 +1,7 @@
 package cz.zcu.kiwi.idea;
 
 import cz.zcu.kiwi.idea.data.Chunk;
+import static cz.zcu.kiwi.cryptography.Arithmetic.*;
 
 class IdeaStep extends AIdeaStep {
 
@@ -9,21 +10,21 @@ class IdeaStep extends AIdeaStep {
     }
 
     Chunk execute(IdeaKey key, int round) {
-        int ak1 = a.mult(input.getBlock(0), key.subKey(0, round, this.encrypt));
-        int ak2 = a.add (input.getBlock(1), key.subKey(1, round, this.encrypt));
-        int ak3 = a.add (input.getBlock(2), key.subKey(2, round, this.encrypt));
-        int ak4 = a.mult(input.getBlock(3), key.subKey(3, round, this.encrypt));
+        int ak1 = mult(input.getBlock(0), key.subKey(0, round, this.encrypt));
+        int ak2 = add (input.getBlock(1), key.subKey(1, round, this.encrypt));
+        int ak3 = add (input.getBlock(2), key.subKey(2, round, this.encrypt));
+        int ak4 = mult(input.getBlock(3), key.subKey(3, round, this.encrypt));
 
-        int b13 = a.xor(ak1, ak3);
-        int b24 = a.xor(ak2, ak4);
+        int b13 = xor(ak1, ak3);
+        int b24 = xor(ak2, ak4);
 
-        int bk135 = a.mult(b13, key.subKey(4, round, this.encrypt));
-        int c1 = a.add(b24, bk135);
+        int bk135 = mult(b13, key.subKey(4, round, this.encrypt));
+        int c1 = add(b24, bk135);
 
-        int ck16 = a.mult(c1, (key.subKey(5, round, this.encrypt)));
-        int d1 = a.mult(bk135, ck16);
+        int ck16 = mult(c1, (key.subKey(5, round, this.encrypt)));
+        int d1 = mult(bk135, ck16);
 
-        return new Chunk(a.xor(ak1, ck16), a.xor(ak3, ck16), a.xor(ak2, d1), a.xor(ak4, d1));
+        return new Chunk(xor(ak1, ck16), xor(ak3, ck16), xor(ak2, d1), xor(ak4, d1));
     }
 
     IdeaStep nextStep(IdeaKey key, int round) {

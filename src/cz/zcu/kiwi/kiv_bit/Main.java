@@ -1,11 +1,14 @@
 package cz.zcu.kiwi.kiv_bit;
 
 import cz.zcu.kiwi.idea.IdeaCodec;
+import cz.zcu.kiwi.idea.IdeaCodecDev;
 import cz.zcu.kiwi.idea.IdeaKey;
 
 import java.io.*;
 
 public class Main {
+
+    private static final int DEBUG = 2;
 
     /**
      * @param args the command line arguments
@@ -19,12 +22,24 @@ public class Main {
         }
 
         try {
-//            main.run(args[0], args[1], args[2], args[3]);
+
             String key = "123456789ABCDEF0123456789ABCDEF0";
             IdeaKey ideaKey = new IdeaKey(key);
 
-            main.run("encode", "data/message.txt", "data/encrypted.txt", ideaKey);
-            main.run("decode", "data/encrypted.txt", "data/decrypted.txt", ideaKey);
+            switch (DEBUG) {
+                case 0:
+                    main.run(args[0], args[1], args[2], args[3]);
+                    break;
+                case 1:
+                    main.run("encode", "data/message.txt", "data/encrypted.txt", ideaKey);
+                    main.run("decode", "data/encrypted.txt", "data/decrypted.txt", ideaKey);
+                    break;
+                case 2:
+                    main.run("encode", "data/message.txt", "data/decrypted.txt", ideaKey);
+                    break;
+                    default:
+                        throw new UnsupportedOperationException("Debug operation " + DEBUG + " not supported");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,7 +54,7 @@ public class Main {
 
     private void run(String operation, String fileIn, String fileOut, IdeaKey key) throws IOException {
 
-        IdeaCodec codec = new IdeaCodec(key);
+        IdeaCodec codec = DEBUG == 2 ? new IdeaCodecDev(key) : new IdeaCodec(key);
 
         FileInputStream fis = new FileInputStream(new File(fileIn));
         FileOutputStream fos = new FileOutputStream(new File(fileOut));
@@ -57,6 +72,5 @@ public class Main {
         }
 
         System.out.format("Total %sd length: %d\n", operation, totalLength);
-
     }
 }

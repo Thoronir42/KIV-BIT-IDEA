@@ -1,6 +1,5 @@
 package cz.zcu.kiwi.idea;
 
-import cz.zcu.kiwi.cryptography.Arithmetic;
 import cz.zcu.kiwi.idea.data.Chunk;
 import cz.zcu.kiwi.idea.data.IdeaInputStream;
 import cz.zcu.kiwi.idea.data.IdeaOutputStream;
@@ -13,7 +12,7 @@ public class IdeaCodec {
 
     final static int ROUNDS = 8;
 
-    private final IdeaKey key;
+    protected final IdeaKey key;
 
 
     public IdeaCodec(String key) {
@@ -32,7 +31,7 @@ public class IdeaCodec {
         return this.processStream(input, output, false);
     }
 
-    private long processStream(InputStream input, OutputStream output, boolean encrypt) throws IOException {
+    protected long processStream(InputStream input, OutputStream output, boolean encrypt) throws IOException {
         IdeaInputStream iis = new IdeaInputStream(input);
         IdeaOutputStream ios = new IdeaOutputStream(output);
 
@@ -48,7 +47,7 @@ public class IdeaCodec {
         return totalLength;
     }
 
-    private Chunk processBlock(Chunk input, IdeaKey key, boolean encrypt) {
+    protected Chunk processBlock(Chunk input, IdeaKey key, boolean encrypt) {
         IdeaStep[] steps = new IdeaStep[ROUNDS];
         steps[0] = new IdeaStep(input, encrypt);
 

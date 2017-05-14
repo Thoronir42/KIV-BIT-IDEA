@@ -3,27 +3,25 @@ package cz.zcu.kiwi.cryptography;
 public class Arithmetic {
 
     private static final int IDEA_MASK = 0xFFFF; // 2 ^ 16
-    private final int mask;
 
-    public Arithmetic() {
-        this.mask = IDEA_MASK;
+    private Arithmetic() {
     }
 
-    public int xor(int a, int b) {
-        return (a ^ b) & this.mask;
+    public static int xor(int a, int b) {
+        return (a ^ b) & IDEA_MASK;
     }
 
-    public int add(int a, int b) {
-        return (a + b) % this.mask;
+    public static int add(int a, int b) {
+        return (a + b) % IDEA_MASK;
     }
 
-    public int mult(int x, int y) {
+    public static int mult(int x, int y) {
         long m = (long) x * y;
         if (m != 0) {
-            return (int) (m % 0x10001) & 0xFFFF;
+            return (int) (m % 0x10001) & IDEA_MASK;
         } else {
             if (x != 0 || y != 0) {
-                return (1 - x - y) & 0xFFFF;
+                return (1 - x - y) & IDEA_MASK;
             }
             return 0;
         }
