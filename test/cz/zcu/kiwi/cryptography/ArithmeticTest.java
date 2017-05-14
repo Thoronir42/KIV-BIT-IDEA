@@ -7,6 +7,18 @@ import static org.junit.Assert.*;
 public class ArithmeticTest {
 
     @Test
+    public void thatPesky100() {
+        new Arithmetic();
+    }
+
+    @Test
+    public void xor() {
+        int a = 2;
+        int b = 7;
+        assertEquals(5, Arithmetic.xor(a, b));
+    }
+
+    @Test
     public void add() throws Exception {
         int[][] data = new int[][]{
                 new int[]{0x0, 0x0, 0x0},
@@ -32,6 +44,8 @@ public class ArithmeticTest {
 //                new int[]{0x0, 0x0, 0x0},
                 new int[]{0x1, 0x10, 0x10},
                 new int[]{0x20, 0x20, 0x400},
+                new int[] {0, 1, 0},
+                new int[] {1, 0, 0}
         };
 
         for(int[] row : data) {

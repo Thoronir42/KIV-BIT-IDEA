@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-class IdeaDataChannel implements AutoCloseable{
+final class IdeaDataChannel implements AutoCloseable {
     private final InputStream inputStream;
     private final OutputStream outputStream;
 
@@ -51,6 +51,11 @@ class IdeaDataChannel implements AutoCloseable{
 
     @Override
     public void close() throws IOException {
-        this.inputStream.close();
+        if(this.inputStream != null) {
+            this.inputStream.close();
+        }
+        if(this.outputStream != null) {
+            this.outputStream.close();
+        }
     }
 }

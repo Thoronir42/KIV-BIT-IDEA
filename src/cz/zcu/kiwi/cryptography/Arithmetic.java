@@ -1,11 +1,11 @@
 package cz.zcu.kiwi.cryptography;
 
-public class Arithmetic {
+public final class Arithmetic {
 
     private static final int IDEA_MASK = 0xFFFF; // 2^16 - 1
     private static final int IDEA_2_16 = 0x10000; // 2^16
 
-    private Arithmetic() {
+    Arithmetic() {
     }
 
     public static int xor(int a, int b) {

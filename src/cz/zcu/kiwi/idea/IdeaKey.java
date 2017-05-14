@@ -14,25 +14,24 @@ public final class IdeaKey {
     private final int[] decryptionKey;
 
     public IdeaKey(CryptoKey key) {
-        if(key.getSize() != SIZE) {
+        if (key.getSize() != SIZE) {
             throw new IllegalArgumentException();
         }
 
         this.encryptionKey = generateEncryptionKey(key.getParts());
         this.decryptionKey = createDecryptionKey(this.encryptionKey);
 
-        printKey(this.encryptionKey);
-        printKey(this.decryptionKey);
+//        printKey(this.encryptionKey);
+//        printKey(this.decryptionKey);
     }
 
-    private void printKey(int[] key) {
+    /*private void printKey(int[] key) {
         for (int i = 0; i < SUB_KEYS_IN_ROUND; i++) {
             System.out.format("%5d", i);
         }
         System.out.println();
 
         for (int i = 0; i < key.length; i++) {
-//            String block = String.format("%16s", Integer.toBinaryString(this.encryptionKey[i])).replace(' ', '0');
             String block = String.format("%04x ", key[i]);
             System.out.print(block);
             if ((i % SUB_KEYS_IN_ROUND) == 5) {
@@ -42,13 +41,15 @@ public final class IdeaKey {
 
         System.out.println();
         System.out.println();
-    }
+    }*/
 
     int subKey(int n, int round, boolean encrypt) {
-        if (0 > round || round > 9) {
+        if (0 > round || round > 8) {
             throw new BoundsException(0, IdeaCodec.ROUNDS + 1, round);
         }
-        if (round == 9 && n > 4) {
+        if (n < 0 ||
+                (round < IdeaCodec.ROUNDS && n > 5) ||
+                (round == IdeaCodec.ROUNDS && n > 3)) {
             throw new IndexOutOfBoundsException("Last (half-)round subKey index must be less than 4");
         }
 

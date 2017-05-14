@@ -7,12 +7,6 @@ public class CryptoKey {
         this.parts = parts;
     }
 
-    public CryptoKey(int[] parts) {
-        this.parts = new byte[parts.length];
-        for (int i = 0; i < parts.length; i++) {
-            this.parts[i] = (byte)parts[i];
-        }
-    }
 
     public byte part(int n) throws IndexOutOfBoundsException {
         return this.parts[n];
@@ -28,7 +22,7 @@ public class CryptoKey {
             byte p = parts[i];
             sb.append(String.format("%02X", p));
             if(i != parts.length - 1) {
-                sb.append(", ");
+                sb.append(" ");
             }
         }
         return "[" + sb.toString() + "]";
