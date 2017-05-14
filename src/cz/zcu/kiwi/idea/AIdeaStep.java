@@ -7,11 +7,14 @@ abstract class AIdeaStep {
 
     final Chunk input;
     final Arithmetic a;
+    final boolean encrypt;
+
     Chunk output;
 
-    AIdeaStep(Chunk input, Arithmetic a) {
+    AIdeaStep(Chunk input, boolean encrypt) {
         this.input = input;
-        this.a = a;
+        this.encrypt = encrypt;
+        this.a = new Arithmetic();
     }
 
     abstract Chunk execute(IdeaKey key, int round);

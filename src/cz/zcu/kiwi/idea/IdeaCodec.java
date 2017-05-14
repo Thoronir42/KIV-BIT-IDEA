@@ -13,7 +13,6 @@ public class IdeaCodec {
 
     final static int ROUNDS = 8;
 
-    private final Arithmetic arithmetic;
     private final IdeaKey key;
 
 
@@ -26,21 +25,21 @@ public class IdeaCodec {
     }
 
     public long encode(InputStream input, OutputStream output) throws IOException {
-        return this.processStream(input, output, this.key);
+        return this.processStream(input, output, true);
     }
 
     public long decode(InputStream input, OutputStream output) throws IOException {
-        return this.processStream(input, output, this.key.inverse());
+        return this.processStream(input, output, false);
     }
 
-    private long processStream(InputStream input, OutputStream output, IdeaKey key) throws IOException {
+    private long processStream(InputStream input, OutputStream output, boolean encrypt) throws IOException {
         IdeaInputStream iis = new IdeaInputStream(input);
         IdeaOutputStream ios = new IdeaOutputStream(output);
 
         long totalLength = 0;
         while (iis.hasMore()) {
             Chunk chunkIn = iis.nextChunk();
-            Chunk chunkOut = processBlock(chunkIn, key);
+            Chunk chunkOut = processBlock(chunkIn, this.key, encrypt);
             ios.writeChunk(chunkOut);
 
             totalLength += Chunk.SIZE;
@@ -49,9 +48,9 @@ public class IdeaCodec {
         return totalLength;
     }
 
-    private Chunk processBlock(Chunk input, IdeaKey key) {
+    private Chunk processBlock(Chunk input, IdeaKey key, boolean encrypt) {
         IdeaStep[] steps = new IdeaStep[ROUNDS];
-        steps[0] = new IdeaStep(input, arithmetic);
+        steps[0] = new IdeaStep(input, encrypt);
 
         for (int i = 1; i < ROUNDS; i++) {
             steps[i] = steps[i - 1].nextStep(key, i - 1);

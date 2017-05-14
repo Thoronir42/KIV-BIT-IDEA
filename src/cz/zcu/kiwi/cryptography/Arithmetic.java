@@ -2,10 +2,11 @@ package cz.zcu.kiwi.cryptography;
 
 public class Arithmetic {
 
+    private static final int IDEA_MASK = 0xFFFF; // 2 ^ 16
     private final int mask;
 
     public Arithmetic() {
-        this.mask = 0xFFFF; // 2 ^ 16
+        this.mask = IDEA_MASK;
     }
 
     public int xor(int a, int b) {
@@ -16,9 +17,57 @@ public class Arithmetic {
         return (a + b) % this.mask;
     }
 
-    public int mult(int a, int b) {
-        return (a * b) % (this.mask + 1);
+    public int mult(int x, int y) {
+        long m = (long) x * y;
+        if (m != 0) {
+            return (int) (m % 0x10001) & 0xFFFF;
+        } else {
+            if (x != 0 || y != 0) {
+                return (1 - x - y) & 0xFFFF;
+            }
+            return 0;
+        }
     }
 
+    public static int inv(int a) {
+        return (IDEA_MASK - a + 1) & IDEA_MASK;
+    }
+
+    public static int modularInverse(int a) {
+        return modularInverse(a, 0x10001);
+    }
+
+    public static int modularInverse(int a, int b) {
+        int q;
+        int r;
+        int t;
+        int u = 0;
+        int v = 1;
+
+
+        while (a > 0) {
+            q = b / a;
+            r = b % a;
+
+            b = a;
+            a = r;
+
+            t = v;
+            v = u - q * v;
+            u = t;
+        }
+
+        if (u < 0)
+            u += b;
+
+        return u & IDEA_MASK;
+    }
+
+    public static int concatBytes(byte a, byte b) {
+        int ia = a & 0xFF;
+        int ib = b & 0xFF;
+
+        return (ia << 8) | ib;
+    }
 
 }
