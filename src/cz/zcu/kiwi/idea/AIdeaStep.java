@@ -1,7 +1,5 @@
 package cz.zcu.kiwi.idea;
 
-import cz.zcu.kiwi.idea.data.Chunk;
-
 abstract class AIdeaStep {
 
     final Chunk input;

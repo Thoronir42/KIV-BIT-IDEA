@@ -1,9 +1,5 @@
 package cz.zcu.kiwi.idea;
 
-import cz.zcu.kiwi.idea.data.Chunk;
-import cz.zcu.kiwi.idea.data.IdeaInputStream;
-import cz.zcu.kiwi.idea.data.IdeaOutputStream;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,14 +28,13 @@ public class IdeaCodec {
     }
 
     protected long processStream(InputStream input, OutputStream output, boolean encrypt) throws IOException {
-        IdeaInputStream iis = new IdeaInputStream(input);
-        IdeaOutputStream ios = new IdeaOutputStream(output);
+        IdeaDataChannel channel = new IdeaDataChannel(input, output);
 
         long totalLength = 0;
-        while (iis.hasMore()) {
-            Chunk chunkIn = iis.nextChunk();
+        while (channel.hasMore()) {
+            Chunk chunkIn = channel.readChunk();
             Chunk chunkOut = processBlock(chunkIn, this.key, encrypt);
-            ios.writeChunk(chunkOut);
+            channel.writeChunk(chunkOut);
 
             totalLength += Chunk.SIZE;
         }

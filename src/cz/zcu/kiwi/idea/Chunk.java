@@ -1,11 +1,11 @@
-package cz.zcu.kiwi.idea.data;
+package cz.zcu.kiwi.idea;
 
 public class Chunk {
 
-    public static final int SIZE = 8; // 4 blocks * 2 bytes
+    static final int SIZE = 8; // 4 blocks * 2 bytes
     private int[] blocks;
 
-    public Chunk(int... blocks) {
+    Chunk(int... blocks) {
         if (blocks.length != 4) {
             throw new IllegalArgumentException("Block count in chunk must be 4");
         }
@@ -17,7 +17,7 @@ public class Chunk {
         return this.blocks;
     }
 
-    public int getBlock(int n) throws IndexOutOfBoundsException {
+    int getBlock(int n) throws IndexOutOfBoundsException {
         return this.blocks[n];
     }
 

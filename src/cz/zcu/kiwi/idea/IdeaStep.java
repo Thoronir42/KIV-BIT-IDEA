@@ -1,6 +1,5 @@
 package cz.zcu.kiwi.idea;
 
-import cz.zcu.kiwi.idea.data.Chunk;
 import static cz.zcu.kiwi.cryptography.Arithmetic.*;
 
 class IdeaStep extends AIdeaStep {
