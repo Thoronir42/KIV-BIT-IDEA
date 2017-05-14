@@ -18,8 +18,11 @@ public class IdeaCodec {
 
 
     public IdeaCodec(String key) {
-        this.arithmetic = new Arithmetic();
-        this.key = new IdeaKey(key);
+        this(new IdeaKey(key));
+    }
+
+    public IdeaCodec(IdeaKey key) {
+        this.key = key;
     }
 
     public long encode(InputStream input, OutputStream output) throws IOException {

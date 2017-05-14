@@ -1,6 +1,7 @@
 package cz.zcu.kiwi.kiv_bit;
 
 import cz.zcu.kiwi.idea.IdeaCodec;
+import cz.zcu.kiwi.idea.IdeaKey;
 
 import java.io.*;
 
@@ -20,9 +21,10 @@ public class Main {
         try {
 //            main.run(args[0], args[1], args[2], args[3]);
             String key = "123456789ABCDEF0123456789ABCDEF0";
+            IdeaKey ideaKey = new IdeaKey(key);
 
-            main.run("encode", "data/message.txt", "data/encrypted.txt", key);
-            main.run("decode", "data/encrypted.txt", "data/decrypted.txt", key);
+            main.run("encode", "data/message.txt", "data/encrypted.txt", ideaKey);
+            main.run("decode", "data/encrypted.txt", "data/decrypted.txt", ideaKey);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -32,6 +34,10 @@ public class Main {
     }
 
     private void run(String operation, String fileIn, String fileOut, String key) throws IOException {
+        this.run(operation, fileIn, fileOut, new IdeaKey(key));
+    }
+
+    private void run(String operation, String fileIn, String fileOut, IdeaKey key) throws IOException {
 
         IdeaCodec codec = new IdeaCodec(key);
 

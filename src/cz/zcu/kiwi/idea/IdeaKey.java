@@ -4,7 +4,7 @@ import cz.zcu.kiwi.cryptography.Arithmetic;
 import cz.zcu.kiwi.cryptography.Key;
 import cz.zcu.kiwi.generic.BoundsException;
 
-final class IdeaKey extends Key {
+public final class IdeaKey extends Key {
 
     private static final int SIZE = 16; // 16 bytes = 128-bit key
     private static final int SUBKEYS_IN_ROUND = 6;
