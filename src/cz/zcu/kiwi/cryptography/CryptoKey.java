@@ -1,10 +1,17 @@
 package cz.zcu.kiwi.cryptography;
 
-public abstract class CryptoKey {
+public class CryptoKey {
     protected final byte[] parts;
 
     public CryptoKey(byte[] parts) {
         this.parts = parts;
+    }
+
+    public CryptoKey(int[] parts) {
+        this.parts = new byte[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            this.parts[i] = (byte)parts[i];
+        }
     }
 
     public byte part(int n) throws IndexOutOfBoundsException {

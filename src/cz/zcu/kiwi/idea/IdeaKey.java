@@ -59,7 +59,7 @@ public final class IdeaKey {
         }
     }
 
-    private static int[] generateEncryptionKey(byte[] key) {
+    static int[] generateEncryptionKey(byte[] key) {
         int[] ek = new int[SUB_KEYS]; // encryption key 52 16-bit encryptionKey
         //First, the 128-bit key is partitioned into eight 16-bit sub-blocks
         for (int i = 0; i < 8; i++) {
@@ -81,7 +81,7 @@ public final class IdeaKey {
         return ek;
     }
 
-    private static int[] createDecryptionKey(int[] ek) {
+    static int[] createDecryptionKey(int[] ek) {
         int[] dk = new int[SUB_KEYS];
 
         //Generate subKeys for decryption
