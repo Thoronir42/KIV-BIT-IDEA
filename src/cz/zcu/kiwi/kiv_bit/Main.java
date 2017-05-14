@@ -2,14 +2,13 @@ package cz.zcu.kiwi.kiv_bit;
 
 import cz.zcu.kiwi.cryptography.HexDecKey;
 import cz.zcu.kiwi.idea.IdeaCodec;
-import cz.zcu.kiwi.idea.IdeaCodecDev;
 import cz.zcu.kiwi.idea.IdeaKey;
 
 import java.io.*;
 
 public class Main {
 
-    private static final int DEBUG = 2;
+    private static final int DEBUG = 1;
 
     /**
      * @param args the command line arguments
@@ -35,9 +34,6 @@ public class Main {
                     main.run("encode", "data/message.txt", "data/encrypted.txt", ideaKey);
                     main.run("decode", "data/encrypted.txt", "data/decrypted.txt", ideaKey);
                     break;
-                case 2:
-                    main.run("encode", "data/message.txt", "data/decrypted.txt", ideaKey);
-                    break;
                     default:
                         throw new UnsupportedOperationException("Debug operation " + DEBUG + " not supported");
             }
@@ -55,7 +51,7 @@ public class Main {
 
     private void run(String operation, String fileIn, String fileOut, IdeaKey key) throws IOException {
 
-        IdeaCodec codec = DEBUG == 2 ? new IdeaCodecDev(key) : new IdeaCodec(key);
+        IdeaCodec codec = new IdeaCodec(key);
 
         FileInputStream fis = new FileInputStream(new File(fileIn));
         FileOutputStream fos = new FileOutputStream(new File(fileOut));

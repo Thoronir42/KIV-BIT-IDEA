@@ -21,8 +21,6 @@ public final class IdeaKey {
         this.encryptionKey = generateEncryptionKey(key.getParts());
         this.decryptionKey = createDecryptionKey(this.encryptionKey);
 
-//        printKey(this.encryptionKey);
-//        printKey(this.decryptionKey);
     }
 
     /*private void printKey(int[] key) {

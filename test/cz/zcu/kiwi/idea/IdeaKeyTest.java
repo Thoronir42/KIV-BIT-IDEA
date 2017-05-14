@@ -11,11 +11,18 @@ import static org.junit.Assert.*;
 public class IdeaKeyTest {
 
     private static byte[] createKey() {
-        return new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        return new byte[]{
+                0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16,
+        };
     }
 
     private static CryptoKey createCryptoKey() {
         return new CryptoKey(createKey());
+    }
+
+    public static IdeaKey mockKey() {
+        return new IdeaKey(createCryptoKey());
     }
 
 
@@ -66,7 +73,7 @@ public class IdeaKeyTest {
 
     private void assertKeySize(int[] key) {
         assertEquals(52, key.length);
-        for(int subKey : key) {
+        for (int subKey : key) {
             assertTrue(0x0 <= subKey && subKey <= 0xFFFF);
         }
     }
