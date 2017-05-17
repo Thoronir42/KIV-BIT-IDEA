@@ -6,3 +6,10 @@ build\.xml
 manifest\.mf
 
 out/
+dist/
+data/
+
+doc/*
+!doc/img
+!doc/*.tex
+!doc/*.bib
